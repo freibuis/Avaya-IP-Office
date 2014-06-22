@@ -6,8 +6,8 @@ This gem gives limted read only integration from your IPOFFICE (only tested on i
 
 Add this line to your application's Gemfile:
 
-    gem 'Avaya' , :git => 'git://github.com/freibuis/Avaya.git' ,branch: master
-
+    gem 'Avaya' , :git => 'git://github.com/freibuis/Avaya-IP-Office.git' ,branch: master
+    
 And then execute:
 
     $ bundle
@@ -58,7 +58,7 @@ Currently CallList not working as I need to reverse engineer the values from the
  
 ## Contributing
 
-1. Fork it ( https://github.com/freibuis/Avaya/fork )
+1. Fork it ( https://github.com/freibuis/Avaya-IP-Office/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
