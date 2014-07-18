@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Freibuis"]
   spec.email         = ["freibuis@gmail.com"]
   spec.summary       = %q{A gem to talk to Avaya Ip Office Platform.}
-  spec.description   = %q{A gem to talk to Avaya Ip Office Platform.}
-  spec.homepage      = ""
+  spec.description   = %q{If you are looking to talk to you Avaya Ip Office then this is the gem for you!}
+  spec.homepage      = "https://github.com/freibuis/Avaya-IP-Office"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
@@ -19,5 +19,5 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 1.6"
-  spec.add_development_dependency "rake"
+  spec.add_development_dependency "rake", "~> 0"
 end
