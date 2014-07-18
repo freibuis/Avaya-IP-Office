@@ -1,15 +1,15 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'Avaya/version'
+require 'avaya/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "Avaya"
+  spec.name          = "avaya"
   spec.version       = Avaya::VERSION
   spec.authors       = ["Freibuis"]
   spec.email         = ["freibuis@gmail.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{A gem to talk to Avaya Ip Office Platform.}
+  spec.description   = %q{A gem to talk to Avaya Ip Office Platform.}
   spec.homepage      = ""
   spec.license       = "MIT"
 

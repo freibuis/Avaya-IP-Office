@@ -6,7 +6,7 @@ This gem gives limted read only integration from your IPOFFICE (only tested on i
 
 Add this line to your application's Gemfile:
 
-    gem 'Avaya' , :git => 'git://github.com/freibuis/Avaya-IP-Office.git' ,branch: master
+    gem 'avaya' , :git => 'git://github.com/freibuis/Avaya-IP-Office.git' ,branch: master
     
 And then execute:
 
@@ -14,7 +14,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install Avaya
+    $ gem install avaya
 
 For rails support just run the following command. This will create the initializer for you to edit
 
