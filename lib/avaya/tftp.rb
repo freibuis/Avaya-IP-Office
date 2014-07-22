@@ -5,7 +5,7 @@ module Avaya
 
   class TFTP
     def initialize (file)
-      tftp = Net::TFTP.new(Avaya::Configuration.host)
+      tftp      = Net::TFTP.new(Avaya::Configuration.host)
       temp_file = Tempfile.new(random_file)
       tftp.getbinaryfile(file, temp_file)
       @file_data = temp_file.read

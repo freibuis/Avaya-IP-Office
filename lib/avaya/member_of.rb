@@ -17,14 +17,12 @@ module Avaya
       groups.each do |group|
         group = group.split(",")
         list << {
-            group: group[0],
-            ext: group[1],
-            queue: group[2] ,
+            group:    group[0],
+            ext:      group[1],
+            queue:    group[2],
             group_id: group.last
-
         }
       end
-
       list
     end
 

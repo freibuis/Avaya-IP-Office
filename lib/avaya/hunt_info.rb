@@ -16,8 +16,8 @@ module Avaya
       list= []
       members.each do |row|
         list << {
-            ext: row.sub("*", ""),
-            active: ((row.include? "*") == false )
+            ext:    row.sub("*", ""),
+            active: ((row.include? "*") == false)
         }
       end
 

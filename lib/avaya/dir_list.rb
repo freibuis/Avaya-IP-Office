@@ -17,7 +17,7 @@ module Avaya
       directory.each do |row|
         row = row.split(",")
         list << {
-            name: row[0],
+            name:   row[0],
             number: row[1]
         }
       end
