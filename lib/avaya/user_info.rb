@@ -9,7 +9,10 @@ module Avaya
                 :forward_unconditional_number,
                 :forward_unconditional_all_calls,
                 :forward_busy,
-                :dnd
+                :dnd,
+                :logged_in,
+                :connected_party,
+                :phone_state
 
     def initialize(ext)
       @ext = ext
@@ -33,8 +36,11 @@ module Avaya
       @forward_unconditional           = @user_info[5] == "1" ? true : false
       @forward_unconditional_number    = @user_info[6]
       @dnd                             = @user_info[8] == "1" ? true : false
+      #Phone State "no" on hook ,"og" off hook
+      @phone_state                     = @user_info[19]
+      @connected_party                 = @user_info[20]
       @forward_unconditional_all_calls = @user_info[25] == "1" ? true : false
-      @voicemail_count                 = @user_info[11]
+      @logged_in                       = @user_info[44] == "1" ? true : false
       self
     end
 
