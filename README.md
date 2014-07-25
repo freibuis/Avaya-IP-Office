@@ -1,10 +1,15 @@
 # Avaya Ip Office integration
+[![Gem Version](https://badge.fury.io/rb/avaya.svg)](http://badge.fury.io/rb/avaya)
 
 This gem gives limted read only integration from your IPOFFICE (only tested on ip office 500v2)
 
 ## Installation
 
 Add this line to your application's Gemfile:
+
+    gem 'avaya'
+    
+    or bleeding edge
 
     gem 'avaya' , :git => 'git://github.com/freibuis/Avaya-IP-Office.git' ,branch: master
     
@@ -23,7 +28,7 @@ For rails support just run the following command. This will create the initializ
 ## Usage
 
 1st create the connection 
-   $ Avaya::Configuration.config  {|config| config.host = "ip_office_server_ipaddress"}
+   $ Avaya::Configuration.host = "ip_office_server_ipaddress"
 
 Once you have set up the connection. you can use the helpers to get data out
 
@@ -53,7 +58,7 @@ an array of :name,:ext,:queue,:voice_mails,:hunt_id is returned
 
 ## Todo:
 
-Currently CallList not working as I need to reverse engineer the values from the phone platform
+Currently user_info not working as I need to reverse engineer the values from the phone platform
  
  
 ## Contributing
