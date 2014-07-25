@@ -1,39 +1,45 @@
 module Avaya
   class CallList
-    attr_reader :all_calls, :name, :ras, :pots, :sip, :q93
+    attr_reader :raw,
+                :name,
+                :ras,
+                :pots,
+                :sip,
+                :q93,
+                :calls
 
     def initialize
 
-      @ras       = []
-      @pots      = []
-      @sip       = []
-      @q93       = []
-      @all_calls = Avaya::TFTP.read(:call_list)
+      @ras   = []
+      @pots  = []
+      @sip   = []
+      @q93   = []
+      @calls = []
+      @raw   = Avaya::TFTP.read(:call_list)
 
     end
 
     def self.get
       call_list = self.new
       call_list.get
-
+      call_list
     end
 
     def get
 
       #items = @all_calls.collect { |row| row.gsub(/Line /, 'Line_').split(' ') }
-      @all_calls.each do |call|
-        case call
-          when call.starts_with? "NAME:"
-            @name = call.gsub!("NAME: ", '').gsub!('"', '')
-          when call.starts_with? "RAS:"
-            ras_line(call)
-          when call.starts_with? "SIPLine:"
-            sip_line(call)
-          when call.starts_with? "Q93Line:"
-            q93_line(call)
+      @raw.each do |call|
+        if call.start_with?("NAME: ")
+          @name = call.gsub!('NAME: ', '').gsub!('"', '')
+        elsif call.start_with? "RAS:"
+          ras_line(call)
+        elsif call.start_with? "SIPLine:"
+          sip_line(call)
+        elsif call.start_with? "Q931Line:"
+          q93_line(call)
 
-          when call.starts_with? "CALL:"
-            call_line(call)
+        elsif call.start_with? "CALL:"
+          call_line(call)
         end
 
       end
@@ -41,46 +47,52 @@ module Avaya
     end
 
     def ras_line(line)
-      line    = line.split(' ')
       ras_det = {
-          id:    line[0].gsub!(/NAME: /, ''),
-          count: line[0].gsub!(/Chans=/, '')
+          id:    line.match(/^RAS: [0-9]*/).to_s.gsub!(/RAS: /, ''),
+          count: line.match(/Chans=[0-9]*/).to_s.gsub!(/Chans=/, '')
       }
-      @ras.merge! ras_det
+      @ras << ras_det
 
     end
 
     def sip_line(line)
-      line     = line.split(' ')
       pots_det = {
-          id:    line[0].gsub!(/POTS: /, ''),
-          count: line[1].gsub!(/Chans=/, ''),
-          used:  line[2].gsub!(/Used=/, ''),
+          id:    line.match(/^SIPLine: [0-9]*/).to_s.gsub!(/SIPLine: /, ''),
+          count: line.match(/Chans=[0-9]*/).to_s.gsub!(/Chans=/, ''),
+          used:  line.match(/Used=[0-9]*/).to_s.gsub!(/Used=/, ''),
       }
-      @pots.merge! pots_det
+      @pots << pots_det
     end
 
     def q93_line(line)
 
-      line    = line.split.gsub(/Q931 PRI TE Version /, 'Q931_PRI_TE_Version_').split(' ')
       q93_det = {
-          id:      line[0].gsub!(/NAME: /, ''),
-          count:   line[1].gsub!(/Chans=/, ''),
-          used:    line[2].gsub!(/Used=/, ''),
-          version: line[4].gsub!(/Version=/, '').gsub!('_', ' ')
+          id:      line.match(/^Q931Line: [0-9]*/).to_s.gsub!(/Q931Line: /, ''),
+          count:   line.match(/Chans=[0-9]*/).to_s.gsub!(/Chans=/, ''),
+          used:    line.match(/Used=[0-9]*/).to_s.gsub!(/Used=/, ''),
+          version: line.match(/Version=.*/).to_s.gsub!(/Version=/, '')
       }
-      @q93.merge! q93_det
+      @q93 << q93_det
     end
 
     def call_line(line)
-      line     = line.gsub(/Line /, 'Line_').split(' ')
-      call_det = {
-
-
+      puts line
+      call_det= {
+          call_id:     line.match(/^CALL: [0-9.]*/).to_s.gsub!(/CALL: /, ''),
+          state:       line.match(/ State=[0-9]*/).to_s.gsub!(/ State=/, ''),
+          cut:         line.match(/Cut=[0-9]*/).to_s.gsub!(/Cut=/, ''),
+          music:       line.match(/Music=[0-9.]*/).to_s.gsub!(/Music=/, ''),
+          a_end:       line.match(/Aend=[a-zA-Z0-9"()]*\s[()0-9.]*/).to_s.gsub!(/Aend=/, ''),
+          b_end:       line.match(/Bend=[a-zA-Z0-9"()]*\s[\[\]a-zA-Z0-9()]*\s[0-9().]*/).to_s.gsub!(/Bend=/, ''),
+          called_num:  line.match(/CalledNum=[0-9]*\s[()a-zA-Z0-9]*/).to_s.gsub!(/CalledNum=/, ''),
+          calling_num: line.match(/CallingNum=[0-9]*\s[()a-zA-Z0-9]*/).to_s.gsub!(/CallingNum=/, ''),
+          internal:    line.match(/Internal=[0-9]*/).to_s.gsub!(/Internal=/, '').to_i,
+          time:        line.match(/Time=[0-9]*/).to_s.gsub!(/Time=/, '').to_i,
+          astate:      line.match(/AState=[0-9]*/).to_s.gsub!(/AState=/, '').to_i
       }
+
+      @calls << call_det
+
     end
-
-
   end
-
 end

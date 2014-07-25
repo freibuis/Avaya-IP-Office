@@ -11,7 +11,7 @@ require 'avaya/hunt_info'
 require 'avaya/user_list'
 require 'avaya/member_of'
 require 'avaya/user_info'
-#require 'avaya/call_list'
+require 'avaya/call_list'
 
 
 module Avaya
