@@ -31,7 +31,7 @@ module Avaya
       @login_name                      = @user_info[0]
       @full_name                       = @user_info[1]
       @ext                             = @user_info[2]
-      @forward_busy                    = @user_info[3] == "1" ? true : false
+      @forward_busy                    = @user_info[3] == "1"
       @forward_no_answer               = @user_info[4] == "1" ? true : false
       @forward_unconditional           = @user_info[5] == "1" ? true : false
       @forward_unconditional_number    = @user_info[6]
@@ -41,6 +41,12 @@ module Avaya
       @connected_party                 = @user_info[20]
       @forward_unconditional_all_calls = @user_info[25] == "1" ? true : false
       @logged_in                       = @user_info[44] == "1" ? true : false
+      @absent_option                   = Integer(@user_info[37])
+      @absent_extra_info               = @user_info[38]
+      @absent_enabled                  = @user_info[39] == "1" ? true : false
+      @ext_template                    = @user_info[53]
+      @twinning_number                 = @user_info[67]
+      @twinning_enabled                = @user_info[68]== "1" #? true : false
       self
     end
 
