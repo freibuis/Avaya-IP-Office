@@ -29,8 +29,11 @@ module Avaya
 
       #items = @all_calls.collect { |row| row.gsub(/Line /, 'Line_').split(' ') }
       @raw.each do |call|
+
         if call.start_with?("NAME: ")
           @name = call.gsub!('NAME: ', '').gsub!('"', '')
+        elsif call.start_with? "POTS:"
+          pots_line(call)
         elsif call.start_with? "RAS:"
           ras_line(call)
         elsif call.start_with? "SIPLine:"
@@ -46,6 +49,14 @@ module Avaya
 
     end
 
+    def pots_line(line)
+      pots_det = {
+          id:    line.match(/^POTS: [0-9]*/).to_s.gsub!(/POTS: /, ''),
+          count: line.match(/Chans=[0-9]*/).to_s.gsub!(/Chans=/, '')
+      }
+      @pots << pots_det
+    end
+
     def ras_line(line)
       ras_det = {
           id:    line.match(/^RAS: [0-9]*/).to_s.gsub!(/RAS: /, ''),
@@ -56,12 +67,14 @@ module Avaya
     end
 
     def sip_line(line)
-      pots_det = {
-          id:    line.match(/^SIPLine: [0-9]*/).to_s.gsub!(/SIPLine: /, ''),
-          count: line.match(/Chans=[0-9]*/).to_s.gsub!(/Chans=/, ''),
-          used:  line.match(/Used=[0-9]*/).to_s.gsub!(/Used=/, ''),
+
+      sip_det = {
+          id:      line.match(/^SIPLine: [0-9]*/).to_s.gsub!(/SIPLine: /, ''),
+          count:   line.match(/Chans=[0-9]*/).to_s.gsub!(/Chans=/, ''),
+          used:    line.match(/Used=[0-9]*/).to_s.gsub!(/Used=/, ''),
+          version: line.match(/Version=.*/).to_s.gsub!(/Version=/, '')
       }
-      @pots << pots_det
+      @sip << sip_det
     end
 
     def q93_line(line)
@@ -76,15 +89,24 @@ module Avaya
     end
 
     def call_line(line)
+      puts line
       call_det= {
           call_id:     line.match(/^CALL: [0-9.]*/).to_s.gsub!(/CALL: /, ''),
           state:       line.match(/ State=[0-9]*/).to_s.gsub!(/ State=/, ''),
           cut:         line.match(/Cut=[0-9]*/).to_s.gsub!(/Cut=/, ''),
           music:       line.match(/Music=[0-9.]*/).to_s.gsub!(/Music=/, ''),
-          a_end:       line.match(/Aend=[a-zA-Z0-9"()]*\s[()0-9.]*/).to_s.gsub!(/Aend=/, ''),
-          b_end:       line.match(/Bend=[a-zA-Z0-9"()]*\s[\[\]a-zA-Z0-9()]*\s[0-9().]*/).to_s.gsub!(/Bend=/, ''),
-          called_num:  line.match(/CalledNum=[0-9]*\s[()a-zA-Z0-9]*/).to_s.gsub!(/CalledNum=/, ''),
-          calling_num: line.match(/CallingNum=[0-9]*\s[()a-zA-Z0-9]*/).to_s.gsub!(/CallingNum=/, ''),
+          a_end_line:  line.match(/Aend="Line [0-9]*"/).to_s.gsub!(/Aend="Line /, '').to_s.gsub!(/"/, ''),
+          a_end:       line.match(/Aend="[a-zA-Z0-9()\s]*"/).to_s.gsub!(/Aend="/, '').to_s.gsub!(/"/, ''),
+          a_end_name:  line.match(/Aend="[a-zA-Z0-9]*\(/).to_s.gsub!(/Aend="/, '').to_s.gsub!(/\(/, ''),
+          a_end_ext:   line.match(/Aend="[a-zA-Z0-9()]*/).to_s.gsub!(/Aend="[a-zA-Z0-9]*\(/, '').to_s.gsub!(/\)/, ''),
+          b_end:       line.match(/Bend="[a-zA-Z0-9\s]*"/).to_s.gsub!(/Bend=/, '').to_s.gsub!(/"/, ''),
+          b_end_line:  line.match(/\[Line [0-9]*/).to_s.gsub!(/\[Line /, ''),
+          b_end_name:  line.match(/Bend="[a-zA-Z0-9]*\(/).to_s.gsub!(/Bend="/, '').to_s.gsub!(/\(/, ''),
+          b_end_ext:   line.match(/Bend="[a-zA-Z0-9()]*/).to_s.gsub!(/Bend="[a-zA-Z0-9]*\(/, '').to_s.gsub!(/\)/, ''),
+          called_num:  line.match(/CalledNum=[0-9]*/).to_s.gsub!(/CalledNum=/, ''),
+          called_num_desc:  line.match(/CalledNum=[0-9]*\s[(a-zA-Z0-9)]*/).to_s.gsub!(/CalledNum=[0-9]*\s\(/, '').to_s.gsub!(/\)/, ''),
+          calling_num: line.match(/CallingNum=[0-9]*/).to_s.gsub!(/CallingNum=/, ''),
+          calling_num_desc: line.match(/CallingNum=[0-9]*[0-9]*\s[(a-zA-Z0-9)]*/).to_s.gsub!(/CallingNum=[0-9]*\s\(/, '').to_s.gsub!(/\)/, ''),
           internal:    line.match(/Internal=[0-9]*/).to_s.gsub!(/Internal=/, '').to_i,
           time:        line.match(/Time=[0-9]*/).to_s.gsub!(/Time=/, '').to_i,
           astate:      line.match(/AState=[0-9]*/).to_s.gsub!(/AState=/, '').to_i
