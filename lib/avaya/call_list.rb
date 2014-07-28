@@ -89,7 +89,7 @@ module Avaya
     end
 
     def call_line(line)
-      puts line
+
       call_det= {
           call_id:     line.match(/^CALL: [0-9.]*/).to_s.gsub!(/CALL: /, ''),
           state:       line.match(/ State=[0-9]*/).to_s.gsub!(/ State=/, ''),
