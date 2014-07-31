@@ -89,27 +89,50 @@ module Avaya
     end
 
     def call_line(line)
+      puts line
+      matches = line =~ /CALL: ([0-9.]*) State=([0-9]*) Cut=([0-9]*) Music=([(0-9.)]*) Aend="([\S\s]*)" \(([0-9.]*)\) Bend="([\S\s]*)" \[([\S\s]*)\] \(([0-9.]*)\) CalledNum=([\S\s]*) \(([\S\s]*)\) CallingNum=([\S\s]*) \(([\S\s]*)\) Internal=([0-9]*) Time=([0-9]*) AState=([0-9]*)/
+
+      call_id             = $1
+      state               = $2
+      cut                 = $3
+      music               = $4
+      a_end               = $5
+      a_end_value         = $6
+      b_end               = $7
+      b_end_desc          = $8
+      b_end_value         = $9
+      called_number       = $10
+      called_number_desc  = $11
+      calling_number      = $12
+      calling_number_desc = $13
+      internal            = $14
+      time                = $15
+      astate              = $16
+
+      # puts call_id
+      puts $5
+      puts $6
+      #  puts $7
+      #  puts $8
+
 
       call_det= {
-          call_id:     line.match(/^CALL: [0-9.]*/).to_s.gsub!(/CALL: /, ''),
-          state:       line.match(/ State=[0-9]*/).to_s.gsub!(/ State=/, ''),
-          cut:         line.match(/Cut=[0-9]*/).to_s.gsub!(/Cut=/, ''),
-          music:       line.match(/Music=[0-9.]*/).to_s.gsub!(/Music=/, ''),
-          a_end_line:  line.match(/Aend="Line [0-9]*"/).to_s.gsub!(/Aend="Line /, '').to_s.gsub!(/"/, ''),
-          a_end:       line.match(/Aend="[a-zA-Z0-9()\s]*"/).to_s.gsub!(/Aend="/, '').to_s.gsub!(/"/, ''),
-          a_end_name:  line.match(/Aend="[a-zA-Z0-9]*\(/).to_s.gsub!(/Aend="/, '').to_s.gsub!(/\(/, ''),
-          a_end_ext:   line.match(/Aend="[a-zA-Z0-9()]*/).to_s.gsub!(/Aend="[a-zA-Z0-9]*\(/, '').to_s.gsub!(/\)/, ''),
-          b_end:       line.match(/Bend="[a-zA-Z0-9\s]*"/).to_s.gsub!(/Bend=/, '').to_s.gsub!(/"/, ''),
-          b_end_line:  line.match(/\[Line [0-9]*/).to_s.gsub!(/\[Line /, ''),
-          b_end_name:  line.match(/Bend="[a-zA-Z0-9]*\(/).to_s.gsub!(/Bend="/, '').to_s.gsub!(/\(/, ''),
-          b_end_ext:   line.match(/Bend="[a-zA-Z0-9()]*/).to_s.gsub!(/Bend="[a-zA-Z0-9]*\(/, '').to_s.gsub!(/\)/, ''),
-          called_num:  line.match(/CalledNum=[0-9]*/).to_s.gsub!(/CalledNum=/, ''),
-          called_num_desc:  line.match(/CalledNum=[0-9]*\s[(a-zA-Z0-9)]*/).to_s.gsub!(/CalledNum=[0-9]*\s\(/, '').to_s.gsub!(/\)/, ''),
-          calling_num: line.match(/CallingNum=[0-9]*/).to_s.gsub!(/CallingNum=/, ''),
-          calling_num_desc: line.match(/CallingNum=[0-9]*[0-9]*\s[(a-zA-Z0-9)]*/).to_s.gsub!(/CallingNum=[0-9]*\s\(/, '').to_s.gsub!(/\)/, ''),
-          internal:    line.match(/Internal=[0-9]*/).to_s.gsub!(/Internal=/, '').to_i,
-          time:        line.match(/Time=[0-9]*/).to_s.gsub!(/Time=/, '').to_i,
-          astate:      line.match(/AState=[0-9]*/).to_s.gsub!(/AState=/, '').to_i
+          call_id:          call_id,
+          state:            state,
+          cut:              cut,
+          music:            music,
+          a_end:            a_end,
+          a_end_value:      a_end_value,
+          b_end:            b_end,
+          b_end_value:      b_end_value,
+          b_end_desc:       b_end_desc,
+          called_num:       called_number,
+          called_num_desc:  called_number_desc,
+          calling_num:      calling_number,
+          calling_num_desc: calling_number_desc,
+          internal:         internal,
+          time:             time,
+          astate:           astate
       }
 
       @calls << call_det
