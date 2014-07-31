@@ -89,9 +89,7 @@ module Avaya
     end
 
     def call_line(line)
-      puts line
       matches = line =~ /CALL: ([0-9.]*) State=([0-9]*) Cut=([0-9]*) Music=([(0-9.)]*) Aend="([\S\s]*)" \(([0-9.]*)\) Bend="([\S\s]*)" \[([\S\s]*)\] \(([0-9.]*)\) CalledNum=([\S\s]*) \(([\S\s]*)\) CallingNum=([\S\s]*) \(([\S\s]*)\) Internal=([0-9]*) Time=([0-9]*) AState=([0-9]*)/
-
       call_id             = $1
       state               = $2
       cut                 = $3
