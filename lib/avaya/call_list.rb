@@ -107,11 +107,6 @@ module Avaya
       time                = $15
       astate              = $16
 
-      # puts call_id
-      puts $5
-      puts $6
-      #  puts $7
-      #  puts $8
 
 
       call_det= {
