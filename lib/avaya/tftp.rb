@@ -10,6 +10,7 @@ module Avaya
       tftp.getbinaryfile(file, temp_file)
       @file_data = temp_file.read
       temp_file.close # close instead of unlink to prevent rails for breaking
+      temp_file.unlink
     end
 
     def self.read(file, var2=nil)
